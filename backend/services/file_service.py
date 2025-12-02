@@ -34,6 +34,12 @@ class FileService:
         pages_dir = self._get_project_dir(project_id) / "pages"
         pages_dir.mkdir(exist_ok=True, parents=True)
         return pages_dir
+
+    def _get_materials_dir(self, project_id: str) -> Path:
+        """Get materials directory for project (for standalone generated assets)"""
+        materials_dir = self._get_project_dir(project_id) / "materials"
+        materials_dir.mkdir(exist_ok=True, parents=True)
+        return materials_dir
     
     def save_template_image(self, file, project_id: str) -> str:
         """
@@ -95,6 +101,37 @@ class FileService:
         # Some PIL Image objects may not support format parameter, so we use extension
         image.save(str(filepath))
         
+        # Return relative path
+        return str(filepath.relative_to(self.upload_folder))
+
+    def save_material_image(self, image: Image.Image, project_id: str,
+                            image_format: str = 'PNG') -> str:
+        """
+        Save standalone generated material image (not bound to a specific page)
+
+        Args:
+            image: PIL Image object
+            project_id: Project ID
+            image_format: Image format (PNG, JPEG, etc.)
+
+        Returns:
+            Relative file path from upload folder
+        """
+        materials_dir = self._get_materials_dir(project_id)
+
+        # Use lowercase extension
+        ext = image_format.lower()
+
+        # Generate unique filename
+        import time
+        timestamp = int(time.time() * 1000)  # milliseconds
+        filename = f"material_{timestamp}.{ext}"
+
+        filepath = materials_dir / filename
+
+        # Save image
+        image.save(str(filepath))
+
         # Return relative path
         return str(filepath.relative_to(self.upload_folder))
     

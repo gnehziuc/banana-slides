@@ -14,8 +14,10 @@ import {
   X,
   Upload,
   Image as ImageIcon,
+  ImagePlus,
 } from 'lucide-react';
 import { Button, Loading, Modal, Textarea, useToast, useConfirm } from '@/components/shared';
+import { MaterialGeneratorModal } from '@/components/shared/MaterialGeneratorModal';
 import { TemplateSelector } from '@/components/shared/TemplateSelector';
 import { SlideCard } from '@/components/preview/SlideCard';
 import { useProjectStore } from '@/store/useProjectStore';
@@ -67,6 +69,8 @@ export const SlidePreview: React.FC = () => {
   const [extraRequirements, setExtraRequirements] = useState<string>('');
   const [isSavingRequirements, setIsSavingRequirements] = useState(false);
   const [isExtraRequirementsExpanded, setIsExtraRequirementsExpanded] = useState(false);
+  // 素材生成模态开关（模块本身可复用，这里只是示例入口）
+  const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
   // 每页编辑参数缓存（前端会话内缓存，便于重复执行）
   const [editContextByPage, setEditContextByPage] = useState<Record<string, {
     prompt: string;
@@ -621,6 +625,14 @@ export const SlidePreview: React.FC = () => {
             onClick={() => setIsTemplateModalOpen(true)}
           >
             更换模板
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<ImagePlus size={18} />}
+            onClick={() => setIsMaterialModalOpen(true)}
+          >
+            素材生成
           </Button>
           <Button
             variant="secondary"
@@ -1189,6 +1201,14 @@ export const SlidePreview: React.FC = () => {
           </div>
         </div>
       </Modal>
+      {/* 素材生成模态组件（可复用模块，这里只是示例挂载） */}
+      {projectId && (
+        <MaterialGeneratorModal
+          projectId={projectId}
+          isOpen={isMaterialModalOpen}
+          onClose={() => setIsMaterialModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

@@ -239,7 +239,7 @@ class AIService:
         
         return prompt
     
-    def generate_image(self, prompt: str, ref_image_path: str, 
+    def generate_image(self, prompt: str, ref_image_path: Optional[str] = None, 
                       aspect_ratio: str = "16:9", resolution: str = "2K",
                       additional_ref_images: Optional[List[Union[str, Image.Image]]] = None) -> Optional[Image.Image]:
         """
@@ -248,7 +248,7 @@ class AIService:
         
         Args:
             prompt: Image generation prompt
-            ref_image_path: Path to reference image (required)
+            ref_image_path: Path to reference image (optional). If None, will generate based on prompt only.
             aspect_ratio: Image aspect ratio (currently not used, kept for compatibility)
             resolution: Image resolution (currently not used, kept for compatibility)
             additional_ref_images: 额外的参考图片列表，可以是本地路径、URL 或 PIL Image 对象
@@ -265,17 +265,20 @@ class AIService:
             if additional_ref_images:
                 print(f"[DEBUG] Additional reference images: {len(additional_ref_images)}")
             print(f"[DEBUG] Config - aspect_ratio: {aspect_ratio}, resolution: {resolution}")
-            
-            # Check if reference image exists
-            if not os.path.exists(ref_image_path):
-                raise FileNotFoundError(f"Reference image not found: {ref_image_path}")
-            
+
             # 构建 contents 列表，包含 prompt 和所有参考图片
-            contents = [prompt]
+            # 约定：如果有主参考图，则放在第一个索引，其后是文本 prompt，再后是其他参考图
+            contents = []
             
-            # 添加主参考图片
-            main_ref_image = Image.open(ref_image_path)
-            contents.append(main_ref_image)
+            # 添加主参考图片（如果提供了路径，放在第一个位置）
+            if ref_image_path:
+                if not os.path.exists(ref_image_path):
+                    raise FileNotFoundError(f"Reference image not found: {ref_image_path}")
+                main_ref_image = Image.open(ref_image_path)
+                contents.append(main_ref_image)
+            
+            # 文本 prompt 紧跟在主参考图之后（或成为第一个元素）
+            contents.append(prompt)
             
             # 添加额外的参考图片
             if additional_ref_images:

@@ -350,6 +350,36 @@ export const exportPDF = async (projectId: string): Promise<Blob> => {
   return response.data;
 };
 
+// ===== 素材生成 =====
+
+/**
+ * 生成单张素材图片（不绑定具体页面）
+ */
+export const generateMaterialImage = async (
+  projectId: string,
+  prompt: string,
+  refImage?: File | null,
+  extraImages?: File[]
+): Promise<ApiResponse<{ image_url: string; relative_path: string }>> => {
+  const formData = new FormData();
+  formData.append('prompt', prompt);
+  if (refImage) {
+    formData.append('ref_image', refImage);
+  }
+
+  if (extraImages && extraImages.length > 0) {
+    extraImages.forEach((file) => {
+      formData.append('extra_images', file);
+    });
+  }
+
+  const response = await apiClient.post<ApiResponse<{ image_url: string; relative_path: string }>>(
+    `/api/projects/${projectId}/materials/generate`,
+    formData
+  );
+  return response.data;
+};
+
 // ===== 用户模板 =====
 
 export interface UserTemplate {
