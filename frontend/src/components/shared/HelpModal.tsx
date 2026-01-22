@@ -112,8 +112,12 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
     <div className="space-y-6">
       {/* 欢迎标题 */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-banana-100 to-orange-100 rounded-2xl">
-          <Sparkles size={32} className="text-banana-600" />
+        <div className="inline-flex items-center justify-center">
+          <img
+            src="/logo.png"
+            alt="蕉幻 Logo"
+            className="h-16 w-16 object-contain"
+          />
         </div>
         <h3 className="text-2xl font-bold text-gray-800">欢迎使用蕉幻！</h3>
         <p className="text-sm text-gray-600">在开始前，让我们先完成基础配置</p>
@@ -170,7 +174,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
       <div className="flex justify-center pt-2">
         <Button
           onClick={handleGoToSettings}
-          className="bg-gradient-to-r from-banana-500 to-orange-500 hover:from-banana-600 hover:to-orange-600 text-white shadow-lg"
+          className="bg-banana-500 hover:bg-banana-600 text-black shadow-lg"
           icon={<Settings size={18} />}
         >
           前往设置页面
@@ -332,7 +336,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             <span className="text-sm font-medium text-gray-700">蕉幻 · Banana Slides</span>
           </div>
           <h2 className="text-2xl font-bold text-gray-800">
-            {currentPage === 0 ? '快速开始' : currentPage === 1 ? '结果案例' : '功能介绍'}
+            {currentPage === 0 ? '快速开始' : currentPage === 1 ? '功能介绍' : '结果案例'}
           </h2>
           <p className="text-sm text-gray-500 mt-1">
             {currentPage === 0 ? '完成基础配置，开启 AI 创作之旅' : '探索如何使用 AI 快速创建精美 PPT'}
@@ -350,7 +354,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                   ? 'bg-banana-500 w-8'
                   : 'bg-gray-300 hover:bg-gray-400 w-2'
               }`}
-              title={idx === 0 ? '引导页' : idx === 1 ? '案例展示' : '功能介绍'}
+              title={idx === 0 ? '引导页' : idx === 1 ? '功能介绍' : '案例展示'}
             />
           ))}
         </div>
@@ -358,8 +362,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
         {/* 内容区 */}
         <div className="min-h-[400px]">
           {currentPage === 0 && renderGuidePage()}
-          {currentPage === 1 && renderShowcasePage()}
-          {currentPage === 2 && renderFeaturesPage()}
+          {currentPage === 1 && renderFeaturesPage()}
+          {currentPage === 2 && renderShowcasePage()}
         </div>
 
         {/* 底部导航 */}
